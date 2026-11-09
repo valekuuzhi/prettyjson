@@ -1,0 +1,265 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /*
+     * PrettyJSON — macOS-inspired design system
+     * References: Finder, Xcode, NSInspector, macOS 26 HIG
+     *
+     * Surfaces use 2% increments of lightness over a near-black base,
+     * creating subtle depth without heavy borders or gradients.
+     */
+
+    /* System font stack — SF Pro on Mac, Inter as the web fallback */
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+    /* Mono stack — SF Mono on Mac, JetBrains as first fallback */
+    --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Fira Code', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    /* ─── Window & Surface Layers ──────────────────────────────────── */
+    --bg-window:    #1c1c1e;   /* NSWindowBackgroundColor equivalent */
+    --bg-toolbar:   #232325;   /* NSToolbar background                */
+    --bg-sidebar:   #1e1e20;   /* NSSidebar background (slightly warmer) */
+    --bg-content:   #1c1c1e;   /* Content area – same as window        */
+    --bg-row-hover: rgba(255,255,255,0.045);
+    --bg-row-active:#2c2c2e;   /* Selected row (non-focused)           */
+
+    /* ─── Separators ───────────────────────────────────────────────── */
+    /* macOS uses very thin rgba separators, not opaque borders */
+    --sep-strong:  rgba(255,255,255,0.10);  /* Toolbar / sidebar dividers */
+    --sep-subtle:  rgba(255,255,255,0.055); /* Section inner dividers     */
+    --sep-hairline:rgba(255,255,255,0.03);  /* Between rows               */
+
+    /* ─── Text ─────────────────────────────────────────────────────── */
+    --text-primary:   rgba(255,255,255,0.88);  /* NSLabelColor              */
+    --text-secondary: rgba(255,255,255,0.50);  /* NSSecondaryLabelColor     */
+    --text-tertiary:  rgba(255,255,255,0.28);  /* NSTertiaryLabelColor      */
+    --text-placeholder:rgba(255,255,255,0.22); /* Placeholder / empty hint  */
+
+    /* ─── Controls ──────────────────────────────────────────────────── */
+    --ctrl-bg:          rgba(255,255,255,0.08);
+    --ctrl-bg-hover:    rgba(255,255,255,0.13);
+    --ctrl-bg-pressed:  rgba(255,255,255,0.05);
+    --ctrl-border:      rgba(255,255,255,0.12);
+
+    /* Segmented control active segment */
+    --seg-active-bg:    rgba(255,255,255,0.14);
+    --seg-active-text:  rgba(255,255,255,0.90);
+
+    /* ─── Accent (macOS blue) ───────────────────────────────────────── */
+    --accent:       #0a84ff;
+    --accent-hover: #409cff;
+
+    /* ─── Semantic States ───────────────────────────────────────────── */
+    --state-valid:  #34c759;   /* System green  */
+    --state-error:  #ff453a;   /* System red    */
+    --state-warn:   #ff9f0a;   /* System orange */
+
+    /* ─── Syntax (Xcode dark theme calibrated) ──────────────────────── */
+    --token-key:         #9ba7b8;   /* Object keys — cool slate, never blue  */
+    --token-string:      #71c48f;   /* Strings — muted sage green            */
+    --token-number:      #d2a679;   /* Numbers — warm sand                   */
+    --token-boolean:     #b08dd1;   /* Booleans — restrained lilac           */
+    --token-null:        #6b7280;   /* null — same as line numbers           */
+    --token-punctuation: #4b5563;   /* {} [] : , — quietest possible         */
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-window);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* macOS subpixel rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  code, pre, kbd, textarea {
+    font-family: var(--font-mono);
+    /* Tabular nums + slashed zero — critical for code readability */
+    font-feature-settings: 'tnum' 1, 'zero' 1, 'ss01' 1;
+  }
+}
+
+/* ─── Scrollbars — Xcode / Finder style overlay scrollbars ──────── */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.14);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.22);
+  background-clip: content-box;
+}
+
+/* ─── Syntax token classes ───────────────────────────────────────── */
+.tok-key         { color: var(--token-key); }
+.tok-string      { color: var(--token-string); }
+.tok-number      { color: var(--token-number); }
+.tok-boolean     { color: var(--token-boolean); font-weight: 500; }
+.tok-null        { color: var(--token-null); font-style: italic; }
+.tok-punctuation { color: var(--token-punctuation); }
+.tok-whitespace  { white-space: pre; }
+
+/* Legacy classes kept for backwards compat — map to new tokens */
+.token-key         { color: var(--token-key); }
+.token-string      { color: var(--token-string); }
+.token-number      { color: var(--token-number); }
+.token-boolean     { color: var(--token-boolean); font-weight: 500; }
+.token-null        { color: var(--token-null); font-style: italic; }
+.token-punctuation { color: var(--token-punctuation); }
+.token-whitespace  { white-space: pre; }
+
+/* ─── Selection ─────────────────────────────────────────────────── */
+::selection {
+  background: rgba(10,132,255,0.35);
+  color: #fff;
+}
+
+/* ─── Focus ring — macOS blue outline ───────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-radius: 3px;
+}
+
+/* ─── macOS-style keyboard shortcut badge ───────────────────────── */
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-secondary);
+  background: var(--ctrl-bg);
+  border: 1px solid var(--ctrl-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  line-height: 1.4;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* ─── Macrostyle separator ──────────────────────────────────────── */
+.mac-sep-v {
+  width: 1px;
+  background: var(--sep-strong);
+  align-self: stretch;
+  flex-shrink: 0;
+}
+.mac-sep-h {
+  height: 1px;
+  background: var(--sep-strong);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* ─── Toolbar button (NSButton bezel style) ─────────────────────── */
+.mac-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-primary);
+  background: var(--ctrl-bg);
+  border: 1px solid var(--ctrl-border);
+  cursor: pointer;
+  transition: background 100ms ease, opacity 100ms ease;
+  user-select: none;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.mac-btn:hover  { background: var(--ctrl-bg-hover); }
+.mac-btn:active { background: var(--ctrl-bg-pressed); }
+.mac-btn:disabled, .mac-btn[disabled] {
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+/* Primary action button */
+.mac-btn-primary {
+  background: var(--accent);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 500;
+}
+.mac-btn-primary:hover  { background: var(--accent-hover); }
+.mac-btn-primary:active { background: var(--accent); opacity: 0.85; }
+
+/* Icon-only toolbar button (no bezel in resting state) */
+.mac-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 100ms ease, color 100ms ease;
+  user-select: none;
+}
+.mac-icon-btn:hover  {
+  background: var(--ctrl-bg);
+  color: var(--text-primary);
+}
+.mac-icon-btn:active { background: var(--ctrl-bg-pressed); }
+.mac-icon-btn:disabled, .mac-icon-btn[disabled] {
+  opacity: 0.30;
+  pointer-events: none;
+}
+
+/* ─── Segmented control (NSSegmentedControl equivalent) ─────────── */
+.mac-seg {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 7px;
+  padding: 2px;
+  gap: 1px;
+}
+.mac-seg-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 100ms ease, color 100ms ease;
+  user-select: none;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.mac-seg-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+.mac-seg-item.active {
+  background: rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.92);
+  font-weight: 500;
+}
+
+/* Icon-only segmented item */
+.mac-seg-item-icon {
+  padding: 3px 7px;
+}
